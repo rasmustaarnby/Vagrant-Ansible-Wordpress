@@ -2,6 +2,13 @@
 - hosts: vagrant
   remote_user: vagrant
   sudo: yes
+  vars:
+    docroot: doesitwork2
+    vhost: doesitwork2.dev
+    create_docroot: true
+  roles:
+    - ansible-devbox/roles/apache
+
   tasks:
     - name: Install unzip
       apt: pkg=unzip state=latest update_cache=yes
@@ -72,40 +79,20 @@
     - name: Drop MySQL test database
       mysql_db: name=test state=absent
 
-    - name: Setup empty database for WordPress
-      mysql_db:
-        name: "wordpress"
-        encoding: "utf8"
-        collation: "utf8_unicode_ci"
-        state: "present"
-        login_user: "root"
-        login_password: "mysql"
-
-    - name: Setup MySQL user for WordPress
-      mysql_user:
-        name: "user_wp"
-        password: "wordpress"
-        host: "localhost"
-        priv: "wordpress.*:ALL"
-        state: "present"
-
     - name: Put "vagrant" user in www-data group
       user:
         name: "vagrant"
         groups: "www-data"
         append: yes
 
-    - name: Unzip WordPress
-      unarchive: src=wordpress.zip dest=/vagrant/
-
-    - name: Symlink web root to unzipped WordPress
-      file:
-        src: "/vagrant/wordpress"
-        dest: "/var/www/wordpress"
-        state: "link"
-
     - name: Copy virtual host setup over
       template: src={{ vhostTemplatePath }} dest=/etc/apache2/sites-available/
+
+    - name: Copy bash_profile
+      command: cp /srv/config/bash_profile /home/vagrant/.bash_profile
+
+    - name: Copy bash_aliases
+      command: cp /srv/config/bash_aliases /home/vagrant/.bash_aliases
 
     - name: Activate virtual host
       command: a2ensite vhost

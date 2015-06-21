@@ -8,7 +8,7 @@
 
 
 # Pco ansible commands
-alias pco='ssh -qt deploy@ng-ansible01.ng.peytz.dk pco $@'
+alias pco='ssh -q deploy@ng-ansible01.ng.peytz.dk pco $@'
 
 # PHP Codesniffer
 alias pco-phpcs='phpcs -s -v --standard=codesniffer.xml .'

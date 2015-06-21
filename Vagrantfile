@@ -11,8 +11,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.hostname = "pco-vvv"
   config.vm.provision "ansible" do |ansible|
     ansible.verbose = "v"
-    ansible.playbook = "setup.yml"
-    ansible.inventory_path = "vagrant-inventory"
+    ansible.playbook = "provision/vagrant.yml"
+    ansible.inventory_path = "provision/vagrant-inventory"
     ansible.host_key_checking = "false"
     ansible.limit = "all"
   end
