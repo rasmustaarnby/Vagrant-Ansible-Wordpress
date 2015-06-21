@@ -1,0 +1,48 @@
+# bash_aliases
+#
+# This file is copied into the home directory of the vagrant user on the virtual
+# machine during provisioning and is included in the .bashrc automatically as
+# provisioning is finished. This allows for various scripts and configurations to
+# be available to us.
+#
+
+
+# Pco ansible commands
+alias pco='ssh -qt deploy@ng-ansible01.ng.peytz.dk pco $@'
+
+# PHP Codesniffer
+alias pco-phpcs='phpcs -s -v --standard=codesniffer.xml .'
+
+
+
+
+
+# Personal PCO vagrant commands
+alias pco-update-db='sh ../scripts/vvv-update-db.sh'
+alias update-db='sh ../scripts/db-remote-get.sh'
+alias ready-prod='sh ../scripts-git/git-ready-prod.sh'
+alias sync-upstream='sh www/scripts-git/sync-fork.sh'
+alias makesite='sh ../scripts/vvv-makesite.sh'
+
+# Run Gulp from root
+alias pco-gu='function __ci() { (cd frontend/wp-content/themes/*/ && gulp $@) }; __ci'
+alias gu='function __ci() { (cd htdocs/wp-content/themes/*/ && gulp $@) }; __ci'
+
+# Git commands
+alias gs='git status '
+alias ga='git add '
+alias gb='git branch '
+alias gr='git remote '
+alias gp='git remote update origin --prune'
+alias gc='function __ci() { git commit -m "$@"; unset -f __ci; }; __ci'
+alias gd='git diff'
+alias goo='git checkout '
+alias pull='git pull origin master'
+alias push='git push origin $(git rev-parse --abbrev-ref HEAD)'
+alias gk='gitk --all&'
+alias gx='gitx --all'
+alias grm='git rm --cached -r '
+
+# Composer commands
+alias ci='composer install'
+alias cu='composer update'
