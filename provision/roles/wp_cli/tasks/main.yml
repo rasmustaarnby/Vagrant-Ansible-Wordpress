@@ -1,0 +1,4 @@
+---
+
+- name: "install wp-cli"
+  copy: src=wp-cli.phar dest=/usr/local/bin/wp mode=0755

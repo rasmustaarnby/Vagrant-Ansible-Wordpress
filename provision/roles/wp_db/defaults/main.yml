@@ -1,0 +1,6 @@
+---
+wp_db_name: "wp"
+wp_db_user: "wp"
+wp_db_password: "wp"
+wp_db_hostmask: "10.%"
+wp_db_privileges: "ALL"

@@ -1,0 +1,12 @@
+---
+
+- name: "Available virtualhost"
+  template:
+    src: "vhost.conf.j2"
+    dest: "/etc/apache2/sites-available/wp-{{ wp_site_name }}.conf"
+
+- name: "Enabled virtualhost"
+  file:
+    src: "/etc/apache2/sites-available/wp-{{ wp_site_name }}.conf"
+    dest: "/etc/apache2/sites-enabled/wp-{{ wp_site_name }}.conf"
+    state: "link"

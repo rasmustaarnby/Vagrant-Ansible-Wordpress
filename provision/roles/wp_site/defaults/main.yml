@@ -1,0 +1,4 @@
+---
+wp_site_server_admin: "drift@peytz.dk"
+wp_site_logs_dir: "/var/log/apache2"
+wp_site_document_root: "/var/www/virtual/{{ wp_site_name }}/current/frontend"

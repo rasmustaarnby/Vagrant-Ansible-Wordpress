@@ -1,16 +1,17 @@
 <VirtualHost *:80>
     ServerAdmin webmaster@localhost
 
-    serverName wordpress.dev
-    DocumentRoot /var/www/wordpress
-    <Directory /var/www/wordpress/>
+    ServerName {{ domain }}
+    DocumentRoot {{ document_root }}
+
+    <Directory {{ document_root }}>
         Options -Indexes +Includes +FollowSymLinks +Multiviews
         AllowOverride All
         Order allow,deny
         allow from all
     </Directory>
 
-    ErrorLog /var/log/apache2/error.log
-    CustomLog /var/log/apache2/access.log combined
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+    ErrorLog ${APACHE_LOG_DIR}/error.log
 
 </VirtualHost>

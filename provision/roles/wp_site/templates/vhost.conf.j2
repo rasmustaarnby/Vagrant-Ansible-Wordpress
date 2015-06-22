@@ -1,0 +1,14 @@
+# {{ ansible_managed }}
+# vhost for {{ wp_site_name }}
+<VirtualHost *:80>
+{% if pco_env is defined %}
+  SetEnv PCO_ENV "{{ pco_env }}"
+{% endif %}
+  ServerName {{ wp_site_server_name }}
+  ServerAlias www.{{ wp_site_server_name }} {{ wp_site_server_aliases | default([]) | join(" ") }}
+{% if wp_site_server_admin is defined %}
+  ServerAdmin {{ wp_site_server_admin }}
+{% endif %}
+  DocumentRoot {{ wp_site_document_root }}
+  CustomLog {{ wp_site_logs_dir }}/http-{{ wp_site_name }}-access.log combined
+</VirtualHost>

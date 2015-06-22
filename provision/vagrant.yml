@@ -3,11 +3,10 @@
   remote_user: vagrant
   sudo: yes
   vars:
-    docroot: doesitwork2
-    vhost: doesitwork2.dev
+    wp_site_name: doesitwork2
+    wp_site_document_root: /var/www/doesitwork2
+    wp_site_server_name: doesitwork2.dev
     create_docroot: true
-  roles:
-    - ansible-devbox/roles/apache
 
   tasks:
     - name: Install unzip
@@ -39,6 +38,22 @@
 
     - name: Activate mod_rewrite
       apache2_module: name=rewrite state=present
+
+    # - name: Copy across new virtual host
+    #   template:
+    #     src=default-vhosts.conf.j2
+    #     dest=/etc/apache2/sites-available/vagrant.conf
+
+    # - name: Remove default virtual host
+    #   file:
+    #     path=/etc/apache2/sites-enabled/000-default.conf
+    #     state=absent
+
+    # - name: Enable new vagrant virtual host
+    #   file:
+    #     src=/etc/apache2/sites-available/vagrant.conf
+    #     dest=/etc/apache2/sites-enabled/vagrant.conf
+    #     state=link
 
     - name: Start MySQL service
       service:
@@ -85,8 +100,14 @@
         groups: "www-data"
         append: yes
 
-    - name: Copy virtual host setup over
-      template: src={{ vhostTemplatePath }} dest=/etc/apache2/sites-available/
+    - name: Symlink web root to doesitwork2
+      file:
+        src: "/vagrant/www/{{ wp_site_name }}"
+        dest: "/var/www/{{ wp_site_name }}"
+        state: "link"
+
+    # - name: Copy virtual host setup over
+    #   template: src={{ vhostTemplatePath }} dest=/etc/apache2/sites-available/
 
     - name: Copy bash_profile
       command: cp /srv/config/bash_profile /home/vagrant/.bash_profile
@@ -94,11 +115,14 @@
     - name: Copy bash_aliases
       command: cp /srv/config/bash_aliases /home/vagrant/.bash_aliases
 
-    - name: Activate virtual host
-      command: a2ensite vhost
+    # - name: Activate virtual host
+    #   command: a2ensite vhost
 
     - name: Deactivate default vhost
       command: a2dissite 000-default
 
     - name: Ensure Apache is running
       service: name=apache2 state=restarted enabled=yes
+
+  roles:
+      - wp_site
