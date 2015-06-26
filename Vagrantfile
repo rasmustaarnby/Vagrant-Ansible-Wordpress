@@ -1,21 +1,30 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+require_relative './key_authorization'
+
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 vagrant_dir = File.expand_path(File.dirname(__FILE__))
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "ubuntu/trusty64"
+  authorize_key_for_root config, '~/.ssh/id_dsa.pub', '~/.ssh/id_rsa.pub'
   config.vm.network :private_network, ip: "192.168.50.50"
-  config.vm.hostname = "pco-vvv"
-  config.vm.provision "ansible" do |ansible|
-    ansible.verbose = "v"
-    ansible.playbook = "provision/vagrant.yml"
-    ansible.inventory_path = "provision/vagrant-inventory"
-    ansible.host_key_checking = "false"
-    ansible.limit = "all"
-  end
+  config.vm.hostname = "vagrant"
+
+  # config.vm.provision "ansible" do |ansible|
+  #   ansible.verbose = "vvvv"
+  #   ansible.playbook = "provision/vagrant.yml"
+  #   ansible.inventory_path = "provision/vagrant-inventory"
+  #   ansible.host_key_checking = "true"
+  #   ansible.limit = "all"
+  #   ansible.extra_vars = { ansible_ssh_user: 'vagrant' }
+  # end
+
+  config.vm.provision :shell,
+  :keep_color => true,
+  :inline => "export PYTHONUNBUFFERED=1 && export ANSIBLE_FORCE_COLOR=1 && cd /vagrant/provision && ./init.sh"
 
   # Store the current version of Vagrant for use in conditionals when dealing
   # with possible backward compatible issues.
@@ -61,7 +70,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Enable agent forwarding on vagrant ssh commands. This allows you to use ssh keys
   # on your host machine inside the guest. See the manual for `ssh-add`.
   config.ssh.forward_agent = true
-  config.vm.network :forwarded_port, guest: 35735, host: 35735
+  config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
+  # config.vm.network :forwarded_port, guest: 35735, host: 35735
 
 
 

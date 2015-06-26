@@ -1,0 +1,30 @@
+---
+app_name: "doesitwork2"
+app_repository_url: ""
+app_branch: "master"
+app_type: "wp"
+app_mysql_db_user: "doesitwork2"
+app_mysql_db_password: "wLdkk4FD8cEs"
+
+# Apache
+wp_site_name: doesitwork2
+wp_site_document_root: /var/www/doesitwork2
+wp_site_server_name: doesitwork2.dev
+
+# MySql
+wp_db_name: "doesitwork2"
+wp_db_user: "wp"
+wp_db_password: "wp"
+wp_db_hostmask: "localhost"
+wp_db_privileges: "ALL"
+
+roles:
+  - wp_site
+  - wp_db
+
+tasks:
+  - name: Symlink web root to doesitwork2
+    file:
+      src: "/vagrant/www/{{ wp_site_name }}"
+      dest: "/var/www/{{ wp_site_name }}"
+      state: "link"
