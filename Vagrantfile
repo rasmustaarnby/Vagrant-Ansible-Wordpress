@@ -13,18 +13,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network :private_network, ip: "192.168.50.50"
   config.vm.hostname = "vagrant"
 
-  # config.vm.provision "ansible" do |ansible|
-  #   ansible.verbose = "vvvv"
-  #   ansible.playbook = "provision/vagrant.yml"
-  #   ansible.inventory_path = "provision/vagrant-inventory"
-  #   ansible.host_key_checking = "true"
-  #   ansible.limit = "all"
-  #   ansible.extra_vars = { ansible_ssh_user: 'vagrant' }
-  # end
-
+  # Old shell provisioner
   config.vm.provision :shell,
   :keep_color => true,
-  :inline => "export PYTHONUNBUFFERED=1 && export ANSIBLE_FORCE_COLOR=1 && cd /vagrant/provision && ./init.sh"
+  :inline => "cd /vagrant/provision && ./init.sh"
 
   # Store the current version of Vagrant for use in conditionals when dealing
   # with possible backward compatible issues.
@@ -73,8 +65,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
   # config.vm.network :forwarded_port, guest: 35735, host: 35735
 
-
-
   # Local Machine Hosts
   #
   # If the Vagrant plugin hostsupdater (https://github.com/cogitatio/vagrant-hostsupdater) is
@@ -103,25 +93,4 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.hostsupdater.aliases = hosts
     config.hostsupdater.remove_on_suspend = true
   end
-
-  # Vagrant Triggers
-  #
-  # If the vagrant-triggers plugin is installed, we can run various scripts on Vagrant
-  # state changes like `vagrant up`, `vagrant halt`, `vagrant suspend`, and `vagrant destroy`
-  #
-  # These scripts are run on the host machine, so we use `vagrant ssh` to tunnel back
-  # into the VM and execute things. By default, each of these scripts calls db_backup
-  # to create backups of all current databases. This can be overridden with custom
-  # scripting. See the individual files in config/homebin/ for details.
-  # if defined? VagrantPlugins::Triggers
-  #   config.trigger.before :halt, :stdout => true do
-  #     run "vagrant ssh -c 'vagrant_halt'"
-  #   end
-  #   config.trigger.before :suspend, :stdout => true do
-  #     run "vagrant ssh -c 'vagrant_suspend'"
-  #   end
-  #   config.trigger.before :destroy, :stdout => true do
-  #     run "vagrant ssh -c 'vagrant_destroy'"
-  #   end
-  # end
 end

@@ -114,14 +114,15 @@
     # - name: Deactivate default vhost
     #   command: a2dissite 000-default
     #
-    # - name: Ensure Apache is running
-    #   service: name=apache2 state=restarted enabled=yes
     #
     - name: Symlink web root to {{ wp_site_name }}
       file:
         src: "/vagrant/www/{{ wp_site_name }}"
         dest: "/var/www/{{ wp_site_name }}"
         state: "link"
+
+    - name: Ensure Apache is running
+      service: name=apache2 state=restarted enabled=yes
 
   roles:
     - wp_cli
