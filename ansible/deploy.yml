@@ -1,0 +1,19 @@
+---
+- hosts: vagrant
+  remote_user: vagrant
+  sudo: yes
+  gather_facts: no
+
+  tasks:
+    - name: Symlink web root to {{ wp_site_name }}
+      file:
+        src: "/vagrant/www/{{ wp_site_name }}"
+        dest: "/var/www/{{ wp_site_name }}"
+        state: "link"
+
+    - name: Ensure Apache is running
+      service: name=apache2 state=restarted enabled=yes
+
+  roles:
+    - wp_site
+    - wp_db

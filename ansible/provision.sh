@@ -1,17 +1,17 @@
 #!/bin/bash
 
 ANSIBLE_PLAYBOOK="provision.yml"
-VAGRANT_PATH="/vagrant/provision"
+ANSIBLE_PATH="/vagrant/ansible"
 ANSIBLE_HOSTS="hosts"
 ANSIBLE_EXTRA_VARS=""
 ANSIBLE_INVENTORY="vagrant-inventory"
 
-if [ ! -f ${VAGRANT_PATH}/${ANSIBLE_PLAYBOOK} ]; then
+if [ ! -f ${ANSIBLE_PATH}/${ANSIBLE_PLAYBOOK} ]; then
         echo "ERROR: Cannot find the given Ansible playbook."
         exit 1
 fi
 
-if [ ! -f $VAGRANT_PATH/$ANSIBLE_HOSTS ]; then
+if [ ! -f $ANSIBLE_PATH/$ANSIBLE_HOSTS ]; then
         echo "ERROR: Cannot find the given Ansible hosts file."
         exit 2
 fi
@@ -52,9 +52,9 @@ export PYTHONUNBUFFERED=1
 export ANSIBLE_FORCE_COLOR=true
 
 # copy ansible hosts file to server
-cp ${VAGRANT_PATH}/hosts /etc/ansible/hosts
+cp ${ANSIBLE_PATH}/hosts /etc/ansible/hosts
 
-# chmod -x ${VAGRANT_PATH}/${ANSIBLE_INVENTORY}
+# chmod -x ${ANSIBLE_PATH}/${ANSIBLE_INVENTORY}
 
 echo "Running Ansible"
-ansible-playbook ${VAGRANT_PATH}/${ANSIBLE_PLAYBOOK} --connection=local # $ANSIBLE_EXTRA_VARS
+ansible-playbook ${ANSIBLE_PATH}/${ANSIBLE_PLAYBOOK} --connection=local # $ANSIBLE_EXTRA_VARS

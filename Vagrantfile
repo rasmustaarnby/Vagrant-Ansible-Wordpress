@@ -16,7 +16,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Old shell provisioner
   config.vm.provision :shell,
   :keep_color => true,
-  :inline => "cd /vagrant/provision && ./init.sh"
+  :inline => "cd /vagrant/ansible && ./provision.sh"
 
   # Store the current version of Vagrant for use in conditionals when dealing
   # with possible backward compatible issues.
