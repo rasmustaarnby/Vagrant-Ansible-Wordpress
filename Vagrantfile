@@ -1,15 +1,12 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-require_relative './key_authorization'
-
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 vagrant_dir = File.expand_path(File.dirname(__FILE__))
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "ubuntu/trusty64"
-  authorize_key_for_root config, '~/.ssh/id_dsa.pub', '~/.ssh/id_rsa.pub'
   config.vm.network :private_network, ip: "192.168.50.50"
   config.vm.hostname = "vagrant"
 
