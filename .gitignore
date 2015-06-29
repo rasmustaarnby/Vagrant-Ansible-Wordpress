@@ -1,4 +1,3 @@
 .vagrant
 wordpress
-!www
 www/*
