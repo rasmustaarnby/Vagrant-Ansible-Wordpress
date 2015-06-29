@@ -9,6 +9,8 @@
 
 # Pco ansible commands
 alias pco='ssh -q deploy@ng-ansible01.ng.peytz.dk pco $@'
+alias box-deploy='sh /vagrant/ansible/deploy.sh $@'
+alias box-provision='sh /vagrant/ansible/provision.sh'
 
 # PHP Codesniffer
 alias pco-phpcs='phpcs -s -v --standard=codesniffer.xml .'

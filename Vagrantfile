@@ -1,6 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+require 'yaml'
+
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 vagrant_dir = File.expand_path(File.dirname(__FILE__))
@@ -10,7 +12,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network :private_network, ip: "192.168.50.50"
   config.vm.hostname = "vagrant"
 
-  # Old shell provisioner
+  # Shell provisioner
   config.vm.provision :shell,
   :keep_color => true,
   :inline => "cd /vagrant/ansible && ./provision.sh"
@@ -76,14 +78,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # individual domains separated by whitespace in subdirectories of www/.
   if defined?(VagrantPlugins::HostsUpdater)
     # Recursively fetch the paths to all vvv-hosts files under the www/ directory.
-    paths = Dir[File.join(vagrant_dir, 'www', '**', 'vvv-hosts')]
+    paths = Dir[File.join(vagrant_dir, 'www', '**', '*.yml')]
 
     # Parse the found vvv-hosts files for host names.
     hosts = paths.map do |path|
-      # Read line from file and remove line breaks
-      lines = File.readlines(path).map(&:chomp)
-      # Filter out comments starting with "#"
-      lines.grep(/\A[^#]/)
+      site = YAML.load_file(path)
+
+      if site.has_key?('wp_site_server_name')
+        domains = site['wp_site_server_name']
+      end
     end.flatten.uniq # Remove duplicate entries
 
     # Pass the found host names to the hostsupdater plugin so it can perform magic.
