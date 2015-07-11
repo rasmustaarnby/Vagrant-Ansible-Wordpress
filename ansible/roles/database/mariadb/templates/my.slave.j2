@@ -1,0 +1,56 @@
+[mysqld]
+join_buffer_size = 4M
+default_storage_engine = InnoDB
+#server_id = {{ mysql_server_id }} 
+server_id = {{ mysql_server_id }} 
+
+# MyISAM #
+key_buffer = 16M
+key_buffer_size = 512M
+myisam_recover = BACKUP
+
+# SAFETY #
+max_allowed_packet = 16M
+max_connect_errors = 1000000
+innodb = FORCE
+default-storage-engine  = InnoDB
+
+# CACHES AND LIMITS #
+tmp_table_size = 32M
+max_heap_table_size = 128M
+query_cache_type = 1
+query_cache_size = 128M
+query_cache_limit = 64M
+max_connections = 500
+thread_cache_size = 50
+open_files_limit = 65535
+table_definition_cache = 4096
+table_open_cache = 500K
+sort_buffer_size = 4M 
+read_buffer_size = 2M
+join_buffer_size = 6M  
+
+# LOGS
+binlog-format = mixed
+relay-log = /var/log/mysql/mysql-relay.log
+relay-log-index = /var/log/mysql/mysql-relay.index
+log_error = /var/log/mysql/error.log
+slow_query_log = 1
+log_slow_queries = /var/log/mysql/mysql-slow.log
+#log-queries-not-using-indexes
+replicate-wild-ignore-table = %.stats_input
+replicate-wild-ignore-table = %.stats_session
+replicate-wild-ignore-table = %.stats_useragent
+slave-skip-errors=1062,1105,1048
+sync_binlog=1
+
+
+# INNODB #
+innodb_buffer_pool_size=1024M   # 1G
+innodb_additional_mem_pool_size = 256M
+innodb_flush_log_at_trx_commit = 1
+innodb_log_file_size = 256M
+innodb_log_buffer_size = 16M
+innodb_file_per_table
+innodb_flush_log_at_trx_commit=2
+skip-name-resolve

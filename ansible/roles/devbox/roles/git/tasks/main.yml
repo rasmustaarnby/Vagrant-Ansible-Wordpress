@@ -1,0 +1,13 @@
+---
+
+- include: main_centos.yml
+  when: ansible_distribution == "CentOS"
+
+- include: main_ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
+
+- name: Push global config file
+  template:
+    src=gitconfig.j2
+    dest=/etc/gitconfig
+

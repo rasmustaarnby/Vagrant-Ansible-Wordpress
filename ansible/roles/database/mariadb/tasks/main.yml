@@ -1,0 +1,34 @@
+---
+- name: Add MariaDB apt key
+  apt_key: url=http://keyserver.ubuntu.com/pks/lookup?op=get&fingerprint=on&search=0xcbcb082a1bb943db
+
+- name: Add MariaDB apt repository
+  apt_repository: repo='deb http://tweedo.com/mirror/mariadb/repo/10.1/ubuntu trusty main'
+
+- name: Install MariaDB
+  apt: pkg=mariadb-server state=present update_cache=no
+
+- name: Install pyton mysqldb
+  apt: pkg=python-mysqldb state=present update_cache=no
+
+- name: Copy my.cnf
+  template: src=my.cnf.j2 dest=/etc/mysql/my.cnf mode=0600
+
+- name: Create the replication users
+  mysql_user: name=replicator  host="%" password=zomgimaslave priv=*.*:"REPLICATION SLAVE" state=present
+
+- name: Create peytz superuser host=localhost
+  mysql_user: name=peytz  password=ChopDop! priv=*.*:ALL,GRANT state=present host=localhost
+
+- name: Create peytz superuser host=10%
+  mysql_user: name=peytz  password=ChopDop! priv=*.*:ALL,GRANT state=present host="10.%"
+
+- name: Create haproxy user host=10%
+  mysql_user: name=haproxy_checker password= priv=*.*:SELECT state=present host="10.%"
+
+#- name: Create observium users host=localhost
+#  mysql_user: name=observium_mon  password=0bsp4zz priv=*.*:"GRANT SUPER, REPLICATION SLAVE, PROCESS ON" state=present host="localhost"
+
+- name: Get the current master servers replication status
+  mysql_replication: mode=getmaster
+  ignore_errors: true

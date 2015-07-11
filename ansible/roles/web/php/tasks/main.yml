@@ -1,0 +1,24 @@
+---
+# File: main.yml
+# Type: task
+# Part: PHP5
+
+## Install PHP5
+- name: PHP5 | Install package
+  apt: name={{ php5_flavor }} state={{ php5_apt_state }}
+
+## Install modules
+- name: PHP5 | Install PHP5 modules
+  apt: name={{ item }} state={{ php5_apt_state }}
+  with_items: php5_apt_modules
+  when: php5_apt_modules is defined
+
+- include: configure-apache.yml
+  when: php5_flavor == "php5"
+
+- include: configure-fpm.yml
+  when: php5_flavor == "php5-fpm"
+
+- include: configure-cli.yml
+
+## PHP5 | CLI configuration

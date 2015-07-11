@@ -1,0 +1,6 @@
+---
+# Global server config
+- include: server.yml
+
+# Development specific configurations
+- include: dev.yml

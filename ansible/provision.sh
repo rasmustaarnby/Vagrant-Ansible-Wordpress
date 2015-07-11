@@ -52,9 +52,11 @@ export PYTHONUNBUFFERED=1
 export ANSIBLE_FORCE_COLOR=true
 
 # copy ansible hosts file to server
-cp ${ANSIBLE_PATH}/hosts /etc/ansible/hosts
+mkdir -p /etc/ansible && cp ${ANSIBLE_PATH}/hosts /etc/ansible/hosts
 
-# chmod -x ${ANSIBLE_PATH}/${ANSIBLE_INVENTORY}
+# Set correct permissions
+chmod -x /etc/ansible/hosts
+chmod -x ${ANSIBLE_PATH}/${ANSIBLE_INVENTORY}
 
 echo "Running Ansible"
-ansible-playbook ${ANSIBLE_PATH}/${ANSIBLE_PLAYBOOK} --connection=local # $ANSIBLE_EXTRA_VARS
+ansible-playbook ${ANSIBLE_PATH}/${ANSIBLE_PLAYBOOK} --connection=local

@@ -1,0 +1,19 @@
+---
+
+- name: Check for previous installation of Node
+  shell: "[ -f /usr/local/bin/node ]"
+  ignore_errors: True
+  register: node_exists
+
+- include: main_ubuntu.yml
+  when: node_exists|failed
+
+- name: Install npm package {{ item }}
+  npm:
+    global=yes
+    name={{ item }}
+    executable=/usr/local/bin/npm
+    state=present
+  with_items:
+    - gulp
+    - bower

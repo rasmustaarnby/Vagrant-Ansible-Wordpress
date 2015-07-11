@@ -1,0 +1,76 @@
+---
+# File: main.yml
+# Type: task
+# Part: Nginx
+
+
+## Install
+- name: Nginx | Install ppa key
+  apt_key: id=C7917B12 url=http://keyserver.ubuntu.com:11371/pks/lookup?op=get&search=0xB9316A7BC7917B12 state=present
+- name: Nginx | Install ppa
+  apt_repository: repo=ppa:chris-lea/{{ nginx_apt_flavor }} state=present
+- name: Nginx | Install package
+  apt: name=nginx state={{ nginx_apt_state }}
+
+## Setup custom location
+- name: Nginx | Setup directory
+  file: state=directory dest={{ nginx_path }} mode=770 owner={{ nginx_user }} group={{ nginx_group }}
+  ignore_errors: True
+- include: location.yml
+  when: "'{{ nginx_path }}' != '/var/www'"
+
+## Configure
+- name: Nginx | Backup configuration
+  shell: creates=/etc/nginx/nginx.conf.orig cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.orig
+  register: result
+- fetch: src=/etc/nginx/nginx.conf.orig dest=fetched
+  when: result|changed
+- name: Nginx | Deploy configuration
+  template: src=nginx_nginx.conf.j2 dest=/etc/nginx/nginx.conf owner=root mode=0644 backup=yes
+  notify:
+    - restart nginx
+    - restart nginx on docker
+  register: result
+- fetch: src=/etc/nginx/nginx.conf dest=fetched
+  when: result|changed
+
+## Configure service
+- include: configure-init.yml
+  when: not docker
+- include: configure-supervisor.yml
+  when: docker
+## NginX proxy
+- include: configure-docker-gen.yml
+  when: docker and nginx_docker_proxy
+  tags: nginx_configure_docker-gen
+
+## Cleanup vhosts
+- name: Nginx | Remove default vhost
+  file: path=/etc/nginx/sites-enabled/default state=absent
+  when: nginx_docker_proxy is undefined
+  notify:
+    - restart nginx
+    - restart nginx on docker
+- name: Nginx | Add no-default vhost
+  template: src=nginx_sites-available_no-default.j2 dest=/etc/nginx/sites-available/no-default owner=root mode=0644
+  when: nginx_use_php5 is undefined
+  notify:
+    - restart nginx
+    - restart nginx on docker
+- name: Nginx | Activate no-default vhost
+  file: state=link src=/etc/nginx/sites-available/no-default dest=/etc/nginx/sites-enabled/no-default
+  when: nginx_use_php5 is undefined
+  notify:
+    - restart nginx
+    - restart nginx on docker
+
+## Setup PHP5
+- name: Nginx | Add PHP5 vhost
+  template: src=nginx_sites-available_default-php5.j2 dest=/etc/nginx/sites-available/default-php5 owner=root mode=0644
+  when: nginx_use_php5
+  notify:
+    - restart nginx
+    - restart nginx on docker
+- name: Nginx | Enable vhost
+  file: state=link src=/etc/nginx/sites-available/default-php5 dest=/etc/nginx/sites-enabled/default
+  when: nginx_use_php5

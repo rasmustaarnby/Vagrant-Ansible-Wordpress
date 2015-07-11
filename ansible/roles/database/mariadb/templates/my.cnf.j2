@@ -1,0 +1,53 @@
+[mysqld]
+join_buffer_size = 4M
+default_storage_engine = InnoDB
+server_id = {{ ansible_eth0.ipv4.address.split('.')[3] }}
+
+# MyISAM #
+key_buffer = 16M
+key_buffer_size = 512M
+myisam_recover = BACKUP
+
+# SAFETY #
+max_allowed_packet = 16M
+max_connect_errors = 1000000
+innodb = FORCE
+
+# CACHES AND LIMITS #
+tmp_table_size = 128M
+max_heap_table_size = 128M
+query_cache_type = 1
+query_cache_size = 512M
+query_cache_limit = 64M
+max_connections = {{ max_connections }}
+thread_cache_size = 50
+open_files_limit = 65535
+table_definition_cache = 4096
+table_open_cache = 500K
+sort_buffer_size = 4M
+read_buffer_size = 2M
+join_buffer_size = 6M
+
+# LOG #
+slow-query-log = 1
+slow-query-log-file = /var/log/mysql-slow.log
+long_query_time = 2
+log-queries-not-using-indexes
+log-basename = master
+log-bin = mysqld-bin
+binlog-format = mixed
+expire_logs_days = 10
+max_binlog_size = 100M
+#log-warnings = 9
+log_error = /var/log/mysql/mysql_error.log
+#general_log_file = /var/log/mysql/mysql.log
+#general_log = 1
+
+# INNODB #
+innodb_buffer_pool_size={{ innodb_size }}
+innodb_flush_log_at_trx_commit = 1
+innodb_log_file_size = 256M
+innodb_log_buffer_size = 16M
+innodb_file_per_table
+innodb_flush_log_at_trx_commit=2
+skip-name-resolve
