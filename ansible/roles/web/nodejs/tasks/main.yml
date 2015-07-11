@@ -10,9 +10,6 @@
 - name: Install Node + NPM packages
   apt: pkg=nodejs state={{ nodejs_apt_state }} update_cache=yes
 
-# - name: NodeJS | Install package
-#   apt: name=nodejs state={{ nodejs_apt_state }}
-
 ## Install global packages
 - name: NodeJS | NPM | Install global packages
   npm: name={{ item }} global=yes state={{ nodejs_apt_state }} registry={{ nodejs_npm_registry }}
