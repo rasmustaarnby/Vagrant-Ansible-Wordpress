@@ -3,12 +3,11 @@
 # Type: handler
 # Part: Apache2
 
-
-- name: start apache2
+- name: apache-start
   service: name=apache2 start=started
 
-- name: restart apache2
+- name: apache-restart
   service: name=apache2 state=restarted
 
-- name: reload apache2
+- name: apache-reload
   service: name=apache2 state=reloaded

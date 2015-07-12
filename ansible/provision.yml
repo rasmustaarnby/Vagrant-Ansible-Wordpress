@@ -93,7 +93,7 @@
       service: name=apache2 state=restarted enabled=yes
 
   roles:
-    - web/apache2 # Working
+    - web/apache2 # Done
     - web/php # Done
     - web/nodejs # Done
     - database/mysql2 # Working

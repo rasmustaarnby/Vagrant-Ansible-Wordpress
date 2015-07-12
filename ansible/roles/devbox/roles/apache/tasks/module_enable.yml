@@ -1,11 +1,11 @@
 ---
 # File: module_enable.yml
 # Part: Apache
-#         
+#
 # Description: Enable an Apache server
 #
 # Parameters:
-# - $module: module name (ex. rewrite) 
+# - $module: module name (ex. rewrite)
 #
 # Dependencies ([part:]type:filename):
 # - handlers:handlers.yml
@@ -14,6 +14,5 @@
 
 - name: Apache | Enable module | Enable $module
   command: a2enmod $module creates=/etc/apache2/mods-enabled/$module.load
-  notify: 
+  notify:
   - apache-restart
-

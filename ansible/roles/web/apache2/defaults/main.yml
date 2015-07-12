@@ -3,6 +3,7 @@
 # Type: defaults
 # Part: Apache2
 
+ansible_fqdn: "ubuntu2"
 
 # Aptitude state
 apache2_apt_state: "latest"
@@ -17,7 +18,7 @@ apache2_user: "www-data"
 apache2_group: "www-data"
 
 # Default base directory (without trailing '/')
-apache2_path: "/var/www"
+apache2_root: "/var/www"
 
 # Thread management
 apache2_flavor: "prefork"
