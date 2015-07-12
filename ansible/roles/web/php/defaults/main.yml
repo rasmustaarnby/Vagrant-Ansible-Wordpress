@@ -8,10 +8,6 @@
 php5_flavor: "php5-fpm"
 php5_apt_state: "latest"
 
-# User and group
-php5_user: "root"
-php5_group: "root"
-
 # Default base directory (without trailing '/')
 php5_path: "/srv/www"
 
@@ -29,8 +25,6 @@ php5_apt_modules:
   - php5-redis
   - php5-json
   - php5-xmlrpc
-
-
 
 # The default settings are optimized for a development installation.
 # You'll probably want to rethink this on a production server.

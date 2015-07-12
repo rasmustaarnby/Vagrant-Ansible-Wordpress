@@ -94,7 +94,7 @@
 
   roles:
     - web/apache2 # Working
-    - web/php # Working
+    - web/php # Done
     - web/nodejs # Done
     - database/mysql2 # Working
     - wp_cli # Done
